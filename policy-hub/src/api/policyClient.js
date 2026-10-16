@@ -5,3 +5,11 @@ export async function fetchPolicyById(id) {
   }
   return response.json();
 }
+
+export async function fetchPolicies() {
+  const response = await fetch('/api/policies');
+  if (!response.ok) {
+    throw new Error('Failed to fetch policies');
+  }
+  return response.json();
+}
