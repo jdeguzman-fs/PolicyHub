@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchPolicyById } from './api/policyClient';
 import { formatPremium } from './PolicyCard';
-import PolicyNotes from './PolicyNotes';
 
 export default function PolicyDetailContainer({ policyId }) {
   const [status, setStatus] = useState('loading');
@@ -40,7 +39,6 @@ export default function PolicyDetailContainer({ policyId }) {
       <h2>{policy.name}</h2>
       <p>Status: {policy.status}</p>
       <p>Premium: {formatPremium(policy.premium, policy.currency)}</p>
-      <PolicyNotes notes={policy.notes} />
     </div>
   );
 }
