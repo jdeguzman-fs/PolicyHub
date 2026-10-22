@@ -68,7 +68,7 @@ export function useAsync(load) {
   return state;
 }
 
-export const usePolicies = () => useAsync(fetchPolicies, []);
+export const usePolicies = () => useAsync(fetchPolicies);
 
 export function usePolicy(id) {
   const load = useCallback(() => fetchPolicyById(id), [id]);
