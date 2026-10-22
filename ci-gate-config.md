@@ -21,9 +21,9 @@ that order and stop at the first failure. Each job has its own `name:` now,
 and that's what GitHub shows as the check. Branch protection matches on
 that name, so renaming a job id later won't break the rule:
 
-- Lint
-- Test
-- Build
+- lint
+- test
+- build
 
 ## What to turn on
 
@@ -32,7 +32,7 @@ Settings > Branches > Add rule, pattern `main`:
 - Require a pull request before merging
 - Require status checks to pass before merging
   - also check "require branches to be up to date"
-  - add Lint, Test, Build as the required checks
+  - add lint, test, build as the required checks
 - Include administrators in the restriction (don't let this get bypassed)
 
 ## Coverage side of it
@@ -52,7 +52,7 @@ current numbers. Not writing them here since they'd be out of date fast.
 
 ## End result once this is live
 
-No PR gets merged into main unless Lint, Test, and Build are all green,
+No PR gets merged into main unless lint, test, and build are all green,
 and a stale branch has to catch up before it's allowed to merge - so
 someone can't sneak a change in against an old version of main that
 never ran the current checks.

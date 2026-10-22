@@ -11,7 +11,7 @@ defaults:
 
 jobs:
   lint:
-    name: Lint
+    name: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
       - run: npm run lint
 
   test:
-    name: Test
+    name: test
     needs: lint
     runs-on: ubuntu-latest
     steps:
@@ -38,7 +38,7 @@ jobs:
       - run: npm run test:coverage
 
   build:
-    name: Build
+    name: build
     needs: test
     runs-on: ubuntu-latest
     steps:
