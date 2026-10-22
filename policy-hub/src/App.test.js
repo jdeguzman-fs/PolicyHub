@@ -1,4 +1,3 @@
-import { act } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -25,7 +24,7 @@ describe('App: list -> select -> detail', () => {
   });
 
   test('selecting a policy from the list shows its detail view', async () => {
-    const user = userEvent.setup ? userEvent.setup() : userEvent;
+    const user = userEvent.setup();
     fetchPolicies.mockResolvedValue([makePolicy()]);
     fetchPolicyById.mockResolvedValue(makePolicy());
 
@@ -33,9 +32,7 @@ describe('App: list -> select -> detail', () => {
 
     const card = await screen.findByText('Comprehensive Auto Insurance');
 
-    await act(async () => {
-      await user.click(card);
-    });
+    await user.click(card);
 
     expect(
       await screen.findByRole('heading', { level: 2, name: 'Comprehensive Auto Insurance' })
@@ -44,21 +41,17 @@ describe('App: list -> select -> detail', () => {
   });
 
   test('the back button returns from the detail view to the policy list', async () => {
-    const user = userEvent.setup ? userEvent.setup() : userEvent;
+    const user = userEvent.setup();
     fetchPolicies.mockResolvedValue([makePolicy()]);
     fetchPolicyById.mockResolvedValue(makePolicy());
 
     render(<App />);
 
     const card = await screen.findByText('Comprehensive Auto Insurance');
-    await act(async () => {
-      await user.click(card);
-    });
+    await user.click(card);
     await screen.findByRole('heading', { level: 2, name: 'Comprehensive Auto Insurance' });
 
-    await act(async () => {
-      await user.click(screen.getByRole('button', { name: /back to policies/i }));
-    });
+    await user.click(screen.getByRole('button', { name: /back to policies/i }));
 
     expect(await screen.findByText('Comprehensive Auto Insurance')).toBeInTheDocument();
     expect(

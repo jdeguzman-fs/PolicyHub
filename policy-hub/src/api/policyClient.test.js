@@ -2,7 +2,7 @@ import { fetchPolicyById, fetchPolicies } from './policyClient';
 
 describe('policyClient', () => {
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.restoreAllMocks(); // restoreAllMocks preserves global.fetch's original implementation;
   });
 
   describe('fetchPolicyById', () => {

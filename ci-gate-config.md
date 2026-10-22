@@ -15,14 +15,15 @@ on a plan that supports it (or if someone wants to flip the repo public).
 
 ## Where the checks come from
 
-`.github/workflows/ci.yml` (workflow name `CI`), runs on PRs into main.
+`.github/workflows/ci.yml` (workflow name `CI`), runs on every PR and on pushes to main.
 Three jobs, chained with `needs:` so they run lint -> test -> build in
-that order and stop at the first failure. Job ids double as the check
-names GitHub shows since none of them have a `name:` override:
+that order and stop at the first failure. Each job has its own `name:` now,
+and that's what GitHub shows as the check. Branch protection matches on
+that name, so renaming a job id later won't break the rule:
 
-- lint
-- test
-- build
+- Lint
+- Test
+- Build
 
 ## What to turn on
 
@@ -31,7 +32,7 @@ Settings > Branches > Add rule, pattern `main`:
 - Require a pull request before merging
 - Require status checks to pass before merging
   - also check "require branches to be up to date"
-  - add lint, test, build as the required checks
+  - add Lint, Test, Build as the required checks
 - Include administrators in the restriction (don't let this get bypassed)
 
 ## Coverage side of it
@@ -46,13 +47,12 @@ The `test` job already fails on its own if coverage drops, via
 | Functions  | 90%       |
 | Lines      | 90%       |
 
-Right now we're sitting well above that (91.17% stmts / 82.22% branch /
-95% funcs / 98.38% lines), so this shouldn't block anything today - it's
-there for when coverage starts slipping later.
+We're above all of these right now. Run `npm run test:coverage` for the
+current numbers. Not writing them here since they'd be out of date fast.
 
 ## End result once this is live
 
-No PR gets merged into main unless lint, test, and build are all green,
+No PR gets merged into main unless Lint, Test, and Build are all green,
 and a stale branch has to catch up before it's allowed to merge - so
 someone can't sneak a change in against an old version of main that
 never ran the current checks.

@@ -1,7 +1,7 @@
 # PolicyHub architecture - Day 9
 
 Writing down how the frontend is structured right now and why, plus what I'd
-change next. Security audit for auth (token storage + CSRF(Cross-Site Request Forgerys)) is at the bottom.
+change next. Security audit for auth (token storage + Cross-Site Request Forgery (CSRF)) is at the bottom.
 Nothing here is being refactored in this PR, it's just the doc.
 
 ## Component tree
@@ -53,7 +53,7 @@ into a hook:
 
 ```js
 // src/hooks/useAsync.js
-export function useAsync(load, deps) {
+export function useAsync(load) {
   const [state, setState] = useState({ status: 'loading', data: null });
 
   useEffect(() => {
@@ -63,14 +63,23 @@ export function useAsync(load, deps) {
       .then((data) => !cancelled && setState({ status: 'success', data }))
       .catch(() => !cancelled && setState({ status: 'error', data: null }));
     return () => { cancelled = true; };
-  }, deps); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [load]);
 
   return state;
 }
 
 export const usePolicies = () => useAsync(fetchPolicies, []);
-export const usePolicy = (id) => useAsync(() => fetchPolicyById(id), [id]);
+
+export function usePolicy(id) {
+  const load = useCallback(() => fetchPolicyById(id), [id]);
+  return useAsync(load);
+}
 ```
+
+`load` is the only dependency now, so the effect reruns when the request
+changes and can't use an old closure. The catch is that `load` has to be
+stable (module-level function or `useCallback`), which is why `usePolicy`
+wraps the call in `useCallback`. No `eslint-disable` needed.
 
 Then the detail container is basically just:
 
@@ -104,7 +113,7 @@ opening the same policy again refetches it. Fine for now. The bigger thing
 is a refresh loses where you were since `selectedPolicyId` is only in state.
 Moving it to the URL (`/policies/:id`) with React Router would fix that.
 
-## Security audit - token storage and CSRF(Cross-Site Request Forgery.)
+## Security audit - token storage and CSRF
 
 ### Current state
 
@@ -118,7 +127,7 @@ a big deal.
 
 ### Where to store the token
 
-| Option            | XSS can steal it? | Needs CSRF(Cross-Site Request Forgery.) protection? |
+| Option            | XSS can steal it? | Needs CSRF protection? |
 |-------------------|-------------------|------------------------|
 | localStorage      | Yes               | No                     |
 | httpOnly cookie   | No                | Yes                    |
@@ -144,7 +153,7 @@ BFF if we can. Don't put tokens in localStorage.
 
 ### CSRF
 
-Going with cookies means we need CSRF(Cross-Site Request Forgery) protection, because the browser sends
+Going with cookies means we need CSRF protection, because the browser sends
 the cookie on requests that come from other sites too. From the OWASP cheat
 sheet, what applies to us:
 

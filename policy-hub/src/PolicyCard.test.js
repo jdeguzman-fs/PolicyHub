@@ -29,7 +29,7 @@ describe("PolicyCard", () => {
   });
 
   test("calls onSelect with the policy id when clicked", async () => {
-    const user = userEvent.setup ? userEvent.setup() : userEvent;
+    const user = userEvent.setup();
     const onSelect = jest.fn();
     render(
       <PolicyCard policy={makePolicy({ id: "pol-999" })} onSelect={onSelect} />
