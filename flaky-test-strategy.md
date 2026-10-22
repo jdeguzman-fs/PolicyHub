@@ -29,11 +29,12 @@ one-line code change nobody reviews closely.
 
 **1. Retry — for tests with a known, external source of nondeterminism**
 
-Use a bounded retry (e.g. `jest.retryTimes(2)`) only when the flake is
+Use a bounded retry (`jest.retryTimes(2)`) only when the flake is
 understood and comes from something outside the code under test —
 timing-sensitive async assertions, a shared test-database race, etc.
 Retry is a mitigation, not a fix: it buys time, and the underlying cause
-still gets a follow-up ticket. Never retry a test whose failure mode is
+still gets a follow-up ticket. `retryTimes` isn't in the global Jest config,
+so you add it in the test file that needs it. Never retry a test whose failure mode is
 unknown — that's masking, not mitigating.
 
 **2. Quarantine — for tests that are flaky for an unknown reason**
