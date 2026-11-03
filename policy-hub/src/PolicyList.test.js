@@ -31,7 +31,7 @@ describe("PolicyList", () => {
   });
 
   test("calls onSelect with the id of the clicked policy", async () => {
-    const user = userEvent.setup ? userEvent.setup() : userEvent;
+    const user = userEvent.setup();
     const onSelect = jest.fn();
     const policies = [
       makePolicy({ id: "pol-1", name: "Comprehensive Auto Insurance" }),

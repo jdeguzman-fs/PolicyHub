@@ -1,7 +1,12 @@
 import { fetchPolicyById, fetchPolicies } from './policyClient';
 
 describe('policyClient', () => {
+  const originalFetch = global.fetch;
+
   afterEach(() => {
+    // Each test swaps global.fetch for a fake. Put the original back after
+    // every test so the fake doesn't carry over into the next one.
+    global.fetch = originalFetch;
     jest.restoreAllMocks();
   });
 
